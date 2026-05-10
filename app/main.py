@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import logging
 from app.interfaces.endpoints.routes import router
+from app.interfaces.errors.exception_handlers import register_exception_handlers
 from core.config import get_settings
 from fastapi import FastAPI
 
@@ -53,4 +54,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+register_exception_handlers(app)
 app.include_router(router, prefix="/api")
