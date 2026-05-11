@@ -3,13 +3,14 @@ from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 
 import logging
+
+from app.infrastructure.storage.redis_client import get_redis
 from app.interfaces.endpoints.routes import router
 from app.interfaces.errors.exception_handlers import register_exception_handlers
 from core.config import get_settings
 from fastapi import FastAPI
 
 from app.infrastructure.logging import setup_logging
-from app.infrastructure.storage.redis import get_redis
 
 settings = get_settings()
 
