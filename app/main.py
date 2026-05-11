@@ -9,6 +9,7 @@ from core.config import get_settings
 from fastapi import FastAPI
 
 from app.infrastructure.logging import setup_logging
+from app.infrastructure.storage.redis import get_redis
 
 settings = get_settings()
 
@@ -30,11 +31,14 @@ openapi_tags = [
 async def lifespan(app: FastAPI):
     logger.info("MoocManus 正在初始化")
 
-    try:
+    redis = get_redis()
+    await redis.init()
 
+    try:
         # lifespan 节点/分界
         yield
     finally:
+        await redis.shutdown()
         logger.info("MoocManus 正在关闭")
 
 
