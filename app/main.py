@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import logging
 
+from app.infrastructure.storage.postgres import get_postgres
 from app.infrastructure.storage.redis_client import get_redis
 from app.interfaces.endpoints.routes import router
 from app.interfaces.errors.exception_handlers import register_exception_handlers
@@ -35,11 +36,15 @@ async def lifespan(app: FastAPI):
     redis = get_redis()
     await redis.init()
 
+    postgres = get_postgres()
+    await postgres.init()
+
     try:
         # lifespan 节点/分界
         yield
     finally:
         await redis.shutdown()
+        await postgres.shutdown()
         logger.info("MoocManus 正在关闭")
 
 

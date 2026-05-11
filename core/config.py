@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     env: str = "development"
     log_level: str = "INFO"
 
-    sqlalchemy_database_uri: str = ""
+    sqlalchemy_database_uri: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/manus"
 
     redis_host: str = "localhost"
     redis_port: int = 6379
