@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict, HttpUrl, Field
 
 
 class LLMConfig(BaseModel):
-    base_url: HttpUrl = "https://api.deepseek.com"
+    base_url: HttpUrl = " "
     api_key: str = ""
     model_name: str = "deepseek-reasoner"
     temperature: float = Field(default=0.7)
