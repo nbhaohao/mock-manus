@@ -1,11 +1,13 @@
 from datetime import datetime
 import uuid
 from enum import Enum
-from typing import Literal, List, Any, Union
+from typing import Literal, List, Any, Union, Optional, Dict
 
 from pydantic import BaseModel, Field
 
+from app.domain.models.file import File
 from app.domain.models.plan import Plan, Step
+from app.domain.models.tool_result import ToolResult
 
 
 class PlanEventStatus(str, Enum):
@@ -18,6 +20,11 @@ class StepEventStatus(str, Enum):
     STARTED = "started"
     COMPLETED = "completed"
     FAILED = "failed"
+
+
+class ToolEventStatus(str, Enum):
+    CALLING = "calling"
+    CALLED = "called"
 
 
 class BaseEvent(BaseModel):
@@ -47,13 +54,33 @@ class MessageEvent(BaseEvent):
     type: Literal["message"] = "message"
     role: Literal["user", "assistant"] = "assistant"
     message: str = ""
-    # todo to implement attachments structure
-    attachments: List[Any] = Field(default_factory=list)
+    attachments: List[File] = Field(default_factory=list)
+
+
+class BrowserTollContent(BaseModel):
+    screenshot: str
+
+
+class MCPToolContent(BaseModel):
+    result: Any
+
+
+# todo: extend more tools
+ToolContent = Union[
+    BrowserTollContent,
+    MCPToolContent,
+]
 
 
 class ToolEvent(BaseEvent):
-    # todo: develop after integrates tool module.
     type: Literal["tool"] = "tool"
+    tool_call_id: str
+    tool_name: str
+    tool_content: Optional[ToolContent] = None
+    function_name: str
+    function_args: Dict[str, Any]
+    function_result: Optional[ToolResult] = None
+    status: ToolEventStatus = ToolEventStatus.CALLING
 
 
 class WaitEvent(BaseEvent):
