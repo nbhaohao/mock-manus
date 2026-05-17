@@ -20,10 +20,10 @@ class TaskRunner(ABC):
 
 
 class Task(Protocol):
-    async def run(self) -> None:
+    async def invoke(self) -> None:
         ...
 
-    async def cancel(self) -> None:
+    def cancel(self) -> bool:
         ...
 
     @property
@@ -51,5 +51,5 @@ class Task(Protocol):
         ...
 
     @classmethod
-    def destroy(cls) -> None:
+    async def destroy(cls) -> None:
         ...

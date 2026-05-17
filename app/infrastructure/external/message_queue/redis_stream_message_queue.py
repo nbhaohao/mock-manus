@@ -9,7 +9,7 @@ from app.infrastructure.storage.redis import get_redis
 logger = logging.getLogger(__name__)
 
 
-class RedisMessageQueue(MessageQueue):
+class RedisStreamMessageQueue(MessageQueue):
     def __init__(self, stream_name: str) -> None:
         self._stream_name = stream_name
         self._redis = get_redis()
