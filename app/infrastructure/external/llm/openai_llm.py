@@ -13,10 +13,11 @@ logger = logging.getLogger(__name__)
 
 class OpenAILLM(LLM):
 
-    def __init__(self, llm_config: LLMConfig):
+    def __init__(self, llm_config: LLMConfig, **kwargs):
         self.client = AsyncOpenAI(
             base_url=str(llm_config.base_url),
             api_key=llm_config.api_key,
+            **kwargs
         )
 
         self._model_name = llm_config.model_name

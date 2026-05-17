@@ -3,7 +3,7 @@ from typing import List, Dict, Any, Protocol
 
 class LLM(Protocol):
     async def invoke(self,
-                     message: List[Dict[str, Any]],
+                     messages: List[Dict[str, Any]],
                      tools: List[Dict[str, Any]] = None,
                      response_format: Dict[str, Any] = None,
                      tool_choice: str = None,
