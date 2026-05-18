@@ -11,7 +11,7 @@ from app.domain.models.memory import Memory
 from app.domain.models.message import Message
 from app.domain.models.tool_result import ToolResult
 from app.domain.services.tools.base import BaseTool
-from app.domain.models.event import Event, ToolEvent, ToolEventStatus, ErrorEvent
+from app.domain.models.event import Event, ToolEvent, ToolEventStatus, ErrorEvent, MessageEvent
 
 logger = logging.getLogger(__name__)
 
@@ -179,3 +179,4 @@ class BaseAgent(ABC):
             message = await self._invoke_llm(messages=tool_messages)
         else:
             yield ErrorEvent(error=f"Agent 迭代超过最大迭代次数: {self._agent_config.max_iterations}, 任务失败")
+        yield MessageEvent(message=message["content"])
