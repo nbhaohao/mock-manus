@@ -8,6 +8,7 @@ from app.domain.external.json_parser import JSONParser
 from app.domain.external.llm import LLM
 from app.domain.models.app_config import AgentConfig
 from app.domain.models.memory import Memory
+from app.domain.models.message import Message
 from app.domain.models.tool_result import ToolResult
 from app.domain.services.tools.base import BaseTool
 from app.domain.models.event import Event, ToolEvent, ToolEventStatus, ErrorEvent
@@ -110,7 +111,26 @@ class BaseAgent(ABC):
     async def compact_memory(self) -> None:
         self._memory.compact()
 
-    # todo: Agent roll_back
+    async def roll_back(self, message: Message) -> None:
+        last_message = self._memory.get_last_message()
+        if (
+                not last_message or
+                not last_message.get("tool_calls") or
+                len(last_message.get("tool_calls")) == 0
+        ):
+            return
+        tool_call = last_message.get("tool_calls")[0]
+        function_name = tool_call.get("function", {}).get("name")
+        tool_call_id = tool_call.get("id")
+        if function_name == "message_ask_user":
+            self._memory.add_message({
+                "role": "tool",
+                "tool_call_id": tool_call_id,
+                "function_name": function_name,
+                "content": message.model_dump_json(),
+            })
+        else:
+            self._memory.roll_back()
 
     async def invoke(self, query: str, format: Optional[str] = None) -> AsyncGenerator[Event, None]:
         format = format if format else self._format
