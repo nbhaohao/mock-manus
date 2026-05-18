@@ -1,12 +1,13 @@
 from typing import Optional
 
-from external.search import SearchEngine
-from models.search import SearchResults
-from models.tool_result import ToolResult
+from app.domain.external.search import SearchEngine
+from app.domain.models.search import SearchResults
+from app.domain.models.tool_result import ToolResult
 from .base import BaseTool, tool
 
 
 class SearchTool(BaseTool):
+    name: str = "search"
 
     def __init__(self, search_engine: SearchEngine) -> None:
         super().__init__()
