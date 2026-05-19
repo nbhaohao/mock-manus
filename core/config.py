@@ -8,7 +8,9 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     app_config_filepath: str = "config.yaml"
 
-    sqlalchemy_database_uri: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/manus"
+    sqlalchemy_database_uri: str = (
+        "postgresql+asyncpg://postgres:postgres@localhost:5432/manus"
+    )
 
     redis_host: str = "localhost"
     redis_port: int = 6379
@@ -23,9 +25,7 @@ class Settings(BaseSettings):
     cos_domain: str = ""
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore"
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )
 
 
